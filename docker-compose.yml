@@ -1,0 +1,23 @@
+db:
+    build: ./db
+    hostname: db
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    ports:
+        - "3306:3306"
+    environment:
+        MYSQL_DATABASE: develop_database
+        MYSQL_ROOT_PASSWORD: root
+    volumes:
+        - ./volume/data/:/var/lib/mysql/
+        - ./volume/conf/db/mysql/multibyte.cnf:/etc/mysql/confi.d/multibyte.cnf
+web:
+    build: ./web
+    ports:
+        - "80:80"
+    links:
+        - db
+    volumes:
+        - .:/var/www/html/
+        - ./volume/conf/web/httpd/httpd.conf:/etc/httpd/conf/httpd.conf
+        - ./volume/conf/web/php/php.ini:/etc/php.ini
+
